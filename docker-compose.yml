@@ -14,5 +14,5 @@ services:
       - "8788:8000"
 
     volumes:
-      - /mnt/user/docker/PlexWeekly:/plexweekly:ro
+      - /mnt/user/docker/PlexWeekly:/plexweekly
       - /mnt/user/docker/PlexWeekly/data:/plexweekly/data:rw

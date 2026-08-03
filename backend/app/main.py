@@ -8,6 +8,7 @@ from services import plexweekly
 from services import logs
 from services import scheduler
 from services import backup
+from services.config_manager import save_config, validate_config
 from services.config_schema import CONFIG_SCHEMA
 
 
@@ -89,6 +90,56 @@ def plexweekly_backup():
 def plexweekly_backups():
 
     return backup.list_backups()
+
+@app.post("/api/plexweekly/config/save")
+def save_plexweekly_config(config: dict):
+
+    try:
+
+
+        validation = validate_config(
+            config
+        )
+
+
+        if not validation["valid"]:
+
+            return {
+
+                "success": False,
+
+                "error": validation["error"]
+
+            }
+
+
+
+        save_config(
+            config
+        )
+
+
+
+        return {
+
+            "success": True,
+
+            "message": "Configuration saved"
+
+        }
+
+
+
+    except Exception as e:
+
+
+        return {
+
+            "success": False,
+
+            "error": str(e)
+
+        }
 
 # -------------------------
 # React Frontend

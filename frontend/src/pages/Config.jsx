@@ -9,6 +9,7 @@ const SENSITIVE_FIELDS = [
 ];
 
 
+
 function displayValue(key,value){
 
     if(
@@ -16,18 +17,23 @@ function displayValue(key,value){
         &&
         value
     ){
+
         return "********";
+
     }
 
 
     if(Array.isArray(value)){
+
         return JSON.stringify(value);
+
     }
 
 
     return String(value ?? "");
 
 }
+
 
 
 
@@ -60,12 +66,16 @@ function Section({icon,title,children}){
 
 
 
+
+
 function Row({
     label,
     value,
     edit,
-    onChange
+    onChange,
+    sensitive
 }){
+
 
     return (
 
@@ -91,6 +101,32 @@ function Row({
 
             ?
 
+            sensitive
+
+            ?
+
+            <input
+
+                type="password"
+
+                placeholder="Leave unchanged"
+
+                onChange={
+                    e =>
+                    onChange(
+                        e.target.value
+                    )
+                }
+
+                style={{
+                    flex:1,
+                    maxWidth:"500px"
+                }}
+
+            />
+
+            :
+
             <input
 
                 value={value ?? ""}
@@ -109,10 +145,24 @@ function Row({
 
             />
 
+
             :
 
             <span>
-                {value}
+                {
+                    sensitive
+                    ?
+                    displayValue(
+                        label === "API Key"
+                        ?
+                        "ApiKey"
+                        :
+                        label,
+                        value
+                    )
+                    :
+                    value
+                }
             </span>
 
             }
@@ -130,165 +180,247 @@ function Row({
 
 
 
+
 export default function Config(){
 
-    const [config,setConfig] =
-        useState(null);
 
+const [config,setConfig] =
+useState(null);
 
-    const [editConfig,setEditConfig] =
-        useState(null);
 
+const [editConfig,setEditConfig] =
+useState(null);
 
-    const [editMode,setEditMode] =
-        useState(false);
 
+const [editMode,setEditMode] =
+useState(false);
 
-    const [backups,setBackups] =
-        useState([]);
 
+const [backups,setBackups] =
+useState([]);
 
-    const [message,setMessage] =
-        useState("");
 
+const [message,setMessage] =
+useState("");
 
 
 
 
-    async function loadData(){
 
-        const cfg =
-            await API.getPlexWeeklyConfig();
+async function loadData(){
 
 
-        setConfig(cfg);
+const cfg =
+await API.getPlexWeeklyConfig();
 
 
-        setEditConfig(
-            structuredClone(cfg)
-        );
+setConfig(cfg);
 
 
-        setBackups(
-            await API.getBackups()
-        );
+setEditConfig(
+    structuredClone(cfg)
+);
 
-    }
 
+setBackups(
+    await API.getBackups()
+);
 
 
+}
 
 
 
-    useEffect(()=>{
 
-        loadData();
 
-    },[]);
+useEffect(()=>{
 
+loadData();
 
+},[]);
 
 
 
 
-    function updateField(
-        key,
-        value
-    ){
 
-        setEditConfig({
 
-            ...editConfig,
+function updateField(key,value){
 
-            [key]:value
 
-        });
+setEditConfig({
 
-    }
+...editConfig,
 
+[key]:value
 
+});
 
 
+}
 
 
 
-    async function createBackup(){
 
-        setMessage(
-            "Creating backup..."
-        );
 
 
-        const result =
-            await API.createBackup();
 
 
-        if(result.success){
+async function createBackup(){
 
-            setMessage(
-                "Backup created"
-            );
 
-            loadData();
+setMessage(
+"Creating backup..."
+);
 
-        }
 
-    }
+const result =
+await API.createBackup();
 
 
 
+if(result.success){
 
+setMessage(
+"Backup created"
+);
 
 
-    function startEdit(){
+loadData();
 
-        setEditConfig(
-            structuredClone(config)
-        );
+}
 
-        setEditMode(true);
 
-    }
+}
 
 
 
 
 
-    function cancelEdit(){
 
-        setEditConfig(
-            structuredClone(config)
-        );
 
-        setEditMode(false);
 
-    }
+function startEdit(){
 
+setEditConfig(
+structuredClone(config)
+);
 
 
+setEditMode(true);
 
+}
 
 
 
 
-    const current =
-        editMode
-        ?
-        editConfig
-        :
-        config;
 
+function cancelEdit(){
 
+setEditConfig(
+structuredClone(config)
+);
 
 
+setEditMode(false);
 
-    if(!config){
+}
 
-        return <h2>Loading...</h2>;
 
-    }
 
 
+
+
+
+
+async function saveConfig(){
+
+
+setMessage(
+"Saving configuration..."
+);
+
+
+
+const cleanConfig =
+structuredClone(editConfig);
+
+
+
+SENSITIVE_FIELDS.forEach(
+key=>{
+
+
+if(
+!cleanConfig[key]
+){
+
+cleanConfig[key]=config[key];
+
+}
+
+
+});
+
+
+
+
+
+const result =
+await API.savePlexWeeklyConfig(
+cleanConfig
+);
+
+
+
+if(result.success){
+
+setMessage(
+"Configuration saved successfully"
+);
+
+
+setEditMode(false);
+
+
+loadData();
+
+}
+else{
+
+
+setMessage(
+"Save failed: " +
+(result.error || "")
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+const current =
+editMode
+?
+editConfig
+:
+config;
+
+
+
+
+
+if(!config){
+
+return <h2>Loading...</h2>;
+
+}
 
 
 
@@ -307,11 +439,11 @@ return (
 
 <button
 onClick={
-    editMode
-    ?
-    cancelEdit
-    :
-    startEdit
+editMode
+?
+cancelEdit
+:
+startEdit
 }
 >
 
@@ -328,22 +460,16 @@ editMode
 
 
 {
+
 editMode &&
 
 <button
 
 style={{
-    marginLeft:"10px"
+marginLeft:"10px"
 }}
 
-onClick={()=>{
-
-setMessage(
-"Save will be enabled after backend validation"
-
-);
-
-}}
+onClick={saveConfig}
 
 >
 
@@ -363,28 +489,35 @@ Save Changes
 
 
 
-
 <Section
 icon="💾"
 title="Backups"
 >
 
+
 <button
 onClick={createBackup}
 >
+
 Create Config Backup
+
 </button>
 
 
 {
+
 backups.map(
 
-file =>
+file=>
 
 <Row
+
 key={file}
+
 label="Backup"
+
 value={file}
+
 />
 
 )
@@ -407,16 +540,12 @@ icon="🎬"
 title="Plex"
 >
 
+
 <Row
 label="Server Label"
 value={current.ServerLabel}
 edit={editMode}
-onChange={
-v=>updateField(
-"ServerLabel",
-v
-)
-}
+onChange={v=>updateField("ServerLabel",v)}
 />
 
 
@@ -424,12 +553,7 @@ v
 label="Plex Web URL"
 value={current.PlexWebUrl}
 edit={editMode}
-onChange={
-v=>updateField(
-"PlexWebUrl",
-v
-)
-}
+onChange={v=>updateField("PlexWebUrl",v)}
 />
 
 
@@ -437,38 +561,21 @@ v
 label="Plex Server URL"
 value={current.PlexServerUrl}
 edit={editMode}
-onChange={
-v=>updateField(
-"PlexServerUrl",
-v
-)
-}
+onChange={v=>updateField("PlexServerUrl",v)}
 />
 
 
 <Row
-label="Plex Token"
-value={
-editMode
-?
-current.PlexToken
-:
-displayValue(
-"PlexToken",
-current.PlexToken
-)
-}
+label="PlexToken"
+value={current.PlexToken}
+sensitive
 edit={editMode}
-onChange={
-v=>updateField(
-"PlexToken",
-v
-)
-}
+onChange={v=>updateField("PlexToken",v)}
 />
 
 
 </Section>
+
 
 
 
@@ -487,35 +594,16 @@ title="Tautulli"
 label="Tautulli URL"
 value={current.TautulliUrl}
 edit={editMode}
-onChange={
-v=>updateField(
-"TautulliUrl",
-v
-)
-}
+onChange={v=>updateField("TautulliUrl",v)}
 />
-
 
 
 <Row
 label="API Key"
-value={
-editMode
-?
-current.ApiKey
-:
-displayValue(
-"ApiKey",
-current.ApiKey
-)
-}
+value={current.ApiKey}
+sensitive
 edit={editMode}
-onChange={
-v=>updateField(
-"ApiKey",
-v
-)
-}
+onChange={v=>updateField("ApiKey",v)}
 />
 
 
@@ -536,6 +624,7 @@ title="Email / SMTP"
 
 
 {
+
 [
 "FromName",
 "FromEmail",
@@ -545,9 +634,8 @@ title="Email / SMTP"
 "SmtpUsername",
 "SmtpPassword",
 "TestEmail"
-].map(
 
-key =>
+].map(key=>
 
 <Row
 
@@ -555,26 +643,16 @@ key={key}
 
 label={key}
 
-value={
+value={current[key]}
+
+sensitive={
 SENSITIVE_FIELDS.includes(key)
-&&
-!editMode
-?
-displayValue(
-key,
-current[key]
-)
-:
-current[key]
 }
 
 edit={editMode}
 
 onChange={
-v=>updateField(
-key,
-v
-)
+v=>updateField(key,v)
 }
 
 />
@@ -601,15 +679,15 @@ title="Scheduler"
 
 
 {
+
 [
 "ScheduleEnabled",
 "ScheduleDay",
 "ScheduleTime",
 "ScheduleGraceMinutes",
 "SchedulerPollSeconds"
-].map(
 
-key =>
+].map(key=>
 
 <Row
 
@@ -621,12 +699,7 @@ value={current[key]}
 
 edit={editMode}
 
-onChange={
-v=>updateField(
-key,
-v
-)
-}
+onChange={v=>updateField(key,v)}
 
 />
 
@@ -652,6 +725,7 @@ title="Newsletter Settings"
 
 
 {
+
 [
 "FooterServerName",
 "DaysBack",
@@ -661,9 +735,8 @@ title="Newsletter Settings"
 "MaxTv",
 "RecentAccessDays",
 "SendDelaySeconds"
-].map(
 
-key =>
+].map(key=>
 
 <Row
 
@@ -675,12 +748,7 @@ value={current[key]}
 
 edit={editMode}
 
-onChange={
-v=>updateField(
-key,
-v
-)
-}
+onChange={v=>updateField(key,v)}
 
 />
 
@@ -690,7 +758,6 @@ v
 
 
 </Section>
-
 
 
 

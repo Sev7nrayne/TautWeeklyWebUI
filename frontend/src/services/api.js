@@ -78,6 +78,28 @@ const API = {
 
         return await response.json();
 
+    },
+
+
+    async savePlexWeeklyConfig(config){
+
+        const response = await fetch(
+            "/api/plexweekly/config/save",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify(config)
+
+            }
+        );
+
+
+        return await response.json();
+
     }
 
 
