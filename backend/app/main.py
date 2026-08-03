@@ -34,7 +34,7 @@ if os.path.exists("static"):
 
     app.mount(
         "/assets",
-        StaticFiles(directory="static"),
+        StaticFiles(directory="static/assets"),
         name="assets"
     )
 
