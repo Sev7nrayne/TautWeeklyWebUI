@@ -9,7 +9,7 @@ const SENSITIVE_FIELDS = [
 ];
 
 
-function displayValue(key, value){
+function displayValue(key,value){
 
     if(
         SENSITIVE_FIELDS.includes(key)
@@ -28,6 +28,7 @@ function displayValue(key, value){
     return String(value ?? "");
 
 }
+
 
 
 
@@ -66,56 +67,53 @@ function Row({
     onChange
 }){
 
-
     return (
 
         <div
-
             style={{
                 display:"flex",
                 justifyContent:"space-between",
                 alignItems:"center",
+                gap:"20px",
                 padding:"8px 0",
-                borderBottom:"1px solid #333",
-                gap:"20px"
+                borderBottom:"1px solid #333"
             }}
-
         >
 
-            <span>
+            <strong>
                 {label}
-            </span>
-
+            </strong>
 
 
             {
-                edit
 
-                ?
+            edit
 
-                <input
+            ?
 
-                    value={value ?? ""}
+            <input
 
-                    onChange={
-                        e =>
-                            onChange(
-                                e.target.value
-                            )
-                    }
+                value={value ?? ""}
 
-                    style={{
-                        flex:"1",
-                        maxWidth:"500px"
-                    }}
+                onChange={
+                    e =>
+                    onChange(
+                        e.target.value
+                    )
+                }
 
-                />
+                style={{
+                    flex:1,
+                    maxWidth:"500px"
+                }}
 
-                :
+            />
 
-                <span>
-                    {value}
-                </span>
+            :
+
+            <span>
+                {value}
+            </span>
 
             }
 
@@ -131,19 +129,19 @@ function Row({
 
 
 
-export default function Config(){
 
+export default function Config(){
 
     const [config,setConfig] =
         useState(null);
 
 
-    const [editMode,setEditMode] =
-        useState(false);
-
-
     const [editConfig,setEditConfig] =
         useState(null);
+
+
+    const [editMode,setEditMode] =
+        useState(false);
 
 
     const [backups,setBackups] =
@@ -158,7 +156,6 @@ export default function Config(){
 
 
     async function loadData(){
-
 
         const cfg =
             await API.getPlexWeeklyConfig();
@@ -176,8 +173,8 @@ export default function Config(){
             await API.getBackups()
         );
 
-
     }
+
 
 
 
@@ -188,7 +185,6 @@ export default function Config(){
         loadData();
 
     },[]);
-
 
 
 
@@ -216,9 +212,7 @@ export default function Config(){
 
 
 
-
     async function createBackup(){
-
 
         setMessage(
             "Creating backup..."
@@ -229,22 +223,17 @@ export default function Config(){
             await API.createBackup();
 
 
-
         if(result.success){
 
             setMessage(
-                "Backup created successfully"
+                "Backup created"
             );
-
 
             loadData();
 
         }
 
-
     }
-
-
 
 
 
@@ -257,12 +246,9 @@ export default function Config(){
             structuredClone(config)
         );
 
-
         setEditMode(true);
 
     }
-
-
 
 
 
@@ -273,7 +259,6 @@ export default function Config(){
         setEditConfig(
             structuredClone(config)
         );
-
 
         setEditMode(false);
 
@@ -286,13 +271,20 @@ export default function Config(){
 
 
 
+    const current =
+        editMode
+        ?
+        editConfig
+        :
+        config;
+
+
+
+
+
     if(!config){
 
-        return (
-            <h2>
-                Loading configuration...
-            </h2>
-        );
+        return <h2>Loading...</h2>;
 
     }
 
@@ -301,107 +293,107 @@ export default function Config(){
 
 
 
-    return (
 
-        <div>
+return (
 
+<div>
 
-            <h1>
-                ⚙️ PlexWeekly Configuration
-            </h1>
 
+<h1>
+⚙️ PlexWeekly Configuration
+</h1>
 
 
 
+<button
+onClick={
+    editMode
+    ?
+    cancelEdit
+    :
+    startEdit
+}
+>
 
-            <button
-                onClick={
-                    editMode
-                    ?
-                    cancelEdit
-                    :
-                    startEdit
-                }
-            >
+{
+editMode
+?
+"Cancel Edit"
+:
+"Edit Configuration"
+}
 
-                {
-                    editMode
-                    ?
-                    "Cancel Edit"
-                    :
-                    "Edit Configuration"
-                }
+</button>
 
-            </button>
 
 
+{
+editMode &&
 
-            {
+<button
 
-                editMode &&
+style={{
+    marginLeft:"10px"
+}}
 
-                <button
-                    style={{
-                        marginLeft:"10px"
-                    }}
+onClick={()=>{
 
-                    onClick={()=>{
+setMessage(
+"Save will be enabled after backend validation"
 
-                        setMessage(
-                            "Save disabled until backend validation is added"
-                        );
+);
 
-                    }}
+}}
 
-                >
+>
 
-                    Save Changes
+Save Changes
 
-                </button>
+</button>
 
-            }
+}
 
 
 
-            <p>
-                {message}
-            </p>
+<p>
+{message}
+</p>
 
 
 
 
 
 
+<Section
+icon="💾"
+title="Backups"
+>
 
-            <Section
-                icon="💾"
-                title="Backups"
-            >
+<button
+onClick={createBackup}
+>
+Create Config Backup
+</button>
 
-                <button
-                    onClick={createBackup}
-                >
-                    Create Config Backup
-                </button>
 
+{
+backups.map(
 
-                {
-                    backups.map(
+file =>
 
-                        file =>
+<Row
+key={file}
+label="Backup"
+value={file}
+/>
 
-                        <Row
-                            key={file}
-                            label="Backup"
-                            value={file}
-                        />
+)
 
-                    )
+}
 
-                }
 
+</Section>
 
-            </Section>
 
 
 
@@ -410,177 +402,189 @@ export default function Config(){
 
 
 
-            <Section
-                icon="🎬"
-                title="Plex"
-            >
+<Section
+icon="🎬"
+title="Plex"
+>
 
-                <Row
-                    label="Server Label"
-                    value={
-                        editMode
-                        ?
-                        editConfig.ServerLabel
-                        :
-                        config.ServerLabel
-                    }
+<Row
+label="Server Label"
+value={current.ServerLabel}
+edit={editMode}
+onChange={
+v=>updateField(
+"ServerLabel",
+v
+)
+}
+/>
 
-                    edit={editMode}
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "ServerLabel",
-                            v
-                        )
-                    }
+<Row
+label="Plex Web URL"
+value={current.PlexWebUrl}
+edit={editMode}
+onChange={
+v=>updateField(
+"PlexWebUrl",
+v
+)
+}
+/>
 
-                />
 
+<Row
+label="Plex Server URL"
+value={current.PlexServerUrl}
+edit={editMode}
+onChange={
+v=>updateField(
+"PlexServerUrl",
+v
+)
+}
+/>
 
 
-                <Row
-                    label="Plex Web URL"
-                    value={
-                        editMode
-                        ?
-                        editConfig.PlexWebUrl
-                        :
-                        config.PlexWebUrl
-                    }
+<Row
+label="Plex Token"
+value={
+editMode
+?
+current.PlexToken
+:
+displayValue(
+"PlexToken",
+current.PlexToken
+)
+}
+edit={editMode}
+onChange={
+v=>updateField(
+"PlexToken",
+v
+)
+}
+/>
 
-                    edit={editMode}
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "PlexWebUrl",
-                            v
-                        )
-                    }
+</Section>
 
-                />
 
 
 
 
-                <Row
-                    label="Plex Server URL"
-                    value={
-                        editMode
-                        ?
-                        editConfig.PlexServerUrl
-                        :
-                        config.PlexServerUrl
-                    }
 
-                    edit={editMode}
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "PlexServerUrl",
-                            v
-                        )
-                    }
 
-                />
+<Section
+icon="📊"
+title="Tautulli"
+>
 
 
+<Row
+label="Tautulli URL"
+value={current.TautulliUrl}
+edit={editMode}
+onChange={
+v=>updateField(
+"TautulliUrl",
+v
+)
+}
+/>
 
 
-                <Row
-                    label="Plex Token"
-                    value={
-                        editMode
-                        ?
-                        editConfig.PlexToken
-                        :
-                        displayValue(
-                            "PlexToken",
-                            config.PlexToken
-                        )
-                    }
 
-                    edit={editMode}
+<Row
+label="API Key"
+value={
+editMode
+?
+current.ApiKey
+:
+displayValue(
+"ApiKey",
+current.ApiKey
+)
+}
+edit={editMode}
+onChange={
+v=>updateField(
+"ApiKey",
+v
+)
+}
+/>
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "PlexToken",
-                            v
-                        )
-                    }
 
-                />
+</Section>
 
 
 
-            </Section>
 
 
 
 
 
 
+<Section
+icon="📧"
+title="Email / SMTP"
+>
 
 
-            <Section
-                icon="📊"
-                title="Tautulli"
-            >
+{
+[
+"FromName",
+"FromEmail",
+"ReplyToEmail",
+"SmtpHost",
+"SmtpPort",
+"SmtpUsername",
+"SmtpPassword",
+"TestEmail"
+].map(
 
-                <Row
-                    label="Tautulli URL"
-                    value={
-                        editMode
-                        ?
-                        editConfig.TautulliUrl
-                        :
-                        config.TautulliUrl
-                    }
+key =>
 
-                    edit={editMode}
+<Row
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "TautulliUrl",
-                            v
-                        )
-                    }
+key={key}
 
-                />
+label={key}
 
+value={
+SENSITIVE_FIELDS.includes(key)
+&&
+!editMode
+?
+displayValue(
+key,
+current[key]
+)
+:
+current[key]
+}
 
+edit={editMode}
 
-                <Row
-                    label="API Key"
-                    value={
-                        editMode
-                        ?
-                        editConfig.ApiKey
-                        :
-                        displayValue(
-                            "ApiKey",
-                            config.ApiKey
-                        )
-                    }
+onChange={
+v=>updateField(
+key,
+v
+)
+}
 
-                    edit={editMode}
+/>
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "ApiKey",
-                            v
-                        )
-                    }
+)
 
-                />
+}
 
-            </Section>
 
+</Section>
 
 
 
@@ -588,65 +592,113 @@ export default function Config(){
 
 
 
-            <Section
-                icon="📧"
-                title="Email / SMTP"
-            >
 
-                <Row
-                    label="SMTP Host"
-                    value={
-                        editMode
-                        ?
-                        editConfig.SmtpHost
-                        :
-                        config.SmtpHost
-                    }
 
-                    edit={editMode}
+<Section
+icon="⏰"
+title="Scheduler"
+>
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "SmtpHost",
-                            v
-                        )
-                    }
 
-                />
+{
+[
+"ScheduleEnabled",
+"ScheduleDay",
+"ScheduleTime",
+"ScheduleGraceMinutes",
+"SchedulerPollSeconds"
+].map(
 
+key =>
 
-                <Row
-                    label="SMTP Username"
-                    value={
-                        editMode
-                        ?
-                        editConfig.SmtpUsername
-                        :
-                        config.SmtpUsername
-                    }
+<Row
 
-                    edit={editMode}
+key={key}
 
-                    onChange={
-                        v =>
-                        updateField(
-                            "SmtpUsername",
-                            v
-                        )
-                    }
+label={key}
 
-                />
+value={current[key]}
 
+edit={editMode}
 
-            </Section>
+onChange={
+v=>updateField(
+key,
+v
+)
+}
 
+/>
 
+)
 
+}
 
 
-        </div>
+</Section>
 
-    );
+
+
+
+
+
+
+
+
+<Section
+icon="📰"
+title="Newsletter Settings"
+>
+
+
+{
+[
+"FooterServerName",
+"DaysBack",
+"WatchedPercent",
+"MinimumEpisodeSeconds",
+"MaxMovies",
+"MaxTv",
+"RecentAccessDays",
+"SendDelaySeconds"
+].map(
+
+key =>
+
+<Row
+
+key={key}
+
+label={key}
+
+value={current[key]}
+
+edit={editMode}
+
+onChange={
+v=>updateField(
+key,
+v
+)
+}
+
+/>
+
+)
+
+}
+
+
+</Section>
+
+
+
+
+
+
+</div>
+
+);
+
 
 }
