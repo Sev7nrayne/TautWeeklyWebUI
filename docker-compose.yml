@@ -1,0 +1,19 @@
+services:
+
+  plexweekly-manager:
+
+    build:
+      context: ./backend
+
+    container_name:
+      plexweekly-manager
+
+    restart:
+      unless-stopped
+
+    ports:
+      - "8788:8000"
+
+    volumes:
+
+      - /mnt/user/docker/PlexWeekly/data:/plexweekly-data:rw
