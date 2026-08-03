@@ -1,0 +1,65 @@
+import os
+import shutil
+from datetime import datetime
+
+
+CONFIG_PATH = "/plexweekly/data/config.json"
+
+BACKUP_PATH = "/plexweekly/data/backups"
+
+
+
+def create_backup():
+
+    if not os.path.exists(CONFIG_PATH):
+
+        return {
+            "success": False,
+            "error": "config.json not found"
+        }
+
+
+    os.makedirs(
+        BACKUP_PATH,
+        exist_ok=True
+    )
+
+
+    timestamp = datetime.now().strftime(
+        "%Y%m%d-%H%M%S"
+    )
+
+
+    backup_file = os.path.join(
+        BACKUP_PATH,
+        f"config.json.{timestamp}.bak"
+    )
+
+
+    shutil.copy2(
+        CONFIG_PATH,
+        backup_file
+    )
+
+
+    return {
+
+        "success": True,
+
+        "backup": backup_file
+
+    }
+
+
+
+def list_backups():
+
+    if not os.path.exists(BACKUP_PATH):
+
+        return []
+
+
+    return sorted(
+        os.listdir(BACKUP_PATH),
+        reverse=True
+    )

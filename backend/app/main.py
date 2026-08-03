@@ -4,12 +4,22 @@ from fastapi.responses import FileResponse
 from datetime import datetime
 import os
 
+from services import plexweekly
+from services import logs
+from services import scheduler
+from services import backup
+from services.config_schema import CONFIG_SCHEMA
+
 
 app = FastAPI(
     title="PlexWeekly-Manager",
     version="0.1.0"
 )
 
+
+# -------------------------
+# Basic API
+# -------------------------
 
 @app.get("/api/status")
 def status():
@@ -30,7 +40,61 @@ def health():
     }
 
 
-if os.path.exists("static"):
+# -------------------------
+# PlexWeekly Integration
+# -------------------------
+
+@app.get("/api/plexweekly/status")
+def plexweekly_status():
+
+    return plexweekly.get_status()
+
+
+@app.get("/api/plexweekly/config")
+def plexweekly_config():
+
+    config = plexweekly.get_config()
+
+    if config is None:
+
+        return {
+            "error": "config.json not found"
+        }
+
+    return config
+
+
+@app.get("/api/plexweekly/schema")
+def plexweekly_schema():
+
+    return CONFIG_SCHEMA
+
+@app.get("/api/plexweekly/logs")
+def plexweekly_logs():
+
+    return logs.get_logs()
+
+@app.get("/api/plexweekly/scheduler")
+def plexweekly_scheduler():
+
+    return scheduler.get_scheduler_status()
+
+@app.post("/api/plexweekly/backup")
+def plexweekly_backup():
+
+    return backup.create_backup()
+
+
+@app.get("/api/plexweekly/backups")
+def plexweekly_backups():
+
+    return backup.list_backups()
+
+# -------------------------
+# React Frontend
+# -------------------------
+
+if os.path.exists("static/assets"):
 
     app.mount(
         "/assets",

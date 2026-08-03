@@ -1,82 +1,127 @@
-import {useEffect,useState} from "react"
+import { useState } from "react";
+
+import Dashboard from "./pages/Dashboard";
+import Config from "./pages/Config";
+import Logs from "./pages/Logs";
+import Scheduler from "./pages/Scheduler";
 
 
 function App(){
 
-const [status,setStatus]=useState(null)
+    const [page,setPage] = useState("dashboard");
 
 
-useEffect(()=>{
+    return (
 
-fetch("/api/status")
-.then(res=>res.json())
-.then(data=>setStatus(data))
-.catch(()=>{
-setStatus({
-error:"Backend unavailable"
-})
-})
-
-},[])
-
-
-return (
-
-<div style={{
-background:"#111",
-color:"#fff",
-minHeight:"100vh",
-padding:"30px",
-fontFamily:"Arial"
-}}>
+        <div
+        style={{
+            background:"#111",
+            color:"#fff",
+            minHeight:"100vh",
+            padding:"30px",
+            fontFamily:"Arial"
+        }}
+        >
 
 
-<h1>
-PlexWeekly-Manager
-</h1>
+            <nav
+            style={{
+                marginBottom:"20px"
+            }}
+            >
 
 
-<h3>
-Dashboard
-</h3>
+                <button
+                style={{
+                    marginRight:"10px",
+                    padding:"10px"
+                }}
+                onClick={() => setPage("dashboard")}
+                >
+                    Dashboard
+                </button>
 
 
-<div style={{
-background:"#222",
-padding:"20px",
-borderRadius:"10px",
-width:"350px"
-}}>
+                <button
+                style={{
+                    marginRight:"10px",
+                    padding:"10px"
+                }}
+                onClick={() => setPage("config")}
+                >
+                    Configuration
+                </button>
 
-<h2>
-Backend Status
-</h2>
+
+                <button
+                style={{
+                    marginRight:"10px",
+                    padding:"10px"
+                }}
+                onClick={() => setPage("logs")}
+                >
+                    Logs
+                </button>
 
 
-{
-status ?
+                <button
+                style={{
+                    marginRight:"10px",
+                    padding:"10px"
+                }}
+                onClick={() => setPage("scheduler")}
+                >
+                    Scheduler
+                </button>
 
-<pre>
-{JSON.stringify(status,null,2)}
-</pre>
 
-:
+            </nav>
 
-<p>
-Checking...
-</p>
+
+            <hr />
+
+
+            {
+                page === "config"
+
+                ?
+
+                <Config />
+
+
+                :
+
+
+                page === "logs"
+
+                ?
+
+                <Logs />
+
+
+                :
+
+
+                page === "scheduler"
+
+                ?
+
+                <Scheduler />
+
+
+                :
+
+
+                <Dashboard />
+
+            }
+
+
+        </div>
+
+    );
 
 }
 
 
-</div>
-
-
-</div>
-
-)
-
-}
-
-
-export default App
+export default App;
