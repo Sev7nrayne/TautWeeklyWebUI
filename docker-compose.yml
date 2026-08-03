@@ -3,7 +3,8 @@ services:
   plexweekly-manager:
 
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
 
     container_name:
       plexweekly-manager
