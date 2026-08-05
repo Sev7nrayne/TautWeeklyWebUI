@@ -16,3 +16,4 @@ services:
     volumes:
       - /mnt/user/docker/PlexWeekly:/plexweekly
       - /mnt/user/docker/PlexWeekly/data:/plexweekly/data:rw
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -240,17 +240,10 @@ users.find(
 
 if(user){
 
-setConfig(prev=>({
-    ...prev,
-    TestEmail:user.email
-}));
-
-
-setEditConfig(prev=>({
-    ...prev,
-    TestEmail:user.email
-}));
-
+updateField(
+    ,
+    user.email
+);
 
 setMessage(
     "Test email updated from Tautulli"
@@ -266,6 +259,17 @@ setMessage(
 
 async function sendTestEmail(){
 
+if(!selectedUser){
+
+setMessage(
+    "Select a Tautulli user first"
+);
+
+return;
+
+}
+
+
 setMessage(
     "Sending test email..."
 );
@@ -273,7 +277,7 @@ setMessage(
 
 const result =
 await fetch(
-    "/api/plexweekly/test-email",
+    "/api/plexweekly/test-email?user_id=" + selectedUser,
     {
         method:"POST"
     }
@@ -283,27 +287,13 @@ await fetch(
 
 setMessage(
     result.message ||
-    "Test email completed"
-);
-
-
-if(result.success){
-
-setMessage(
-    "✅ Test email sent successfully"
-);
-
-}
-else{
-
-setMessage(
-    "❌ Test email failed: " +
-    (result.message || "")
+    "Test email request completed"
 );
 
 }
 
-}
+
+
 
 
 async function createBackup(){
@@ -587,7 +577,6 @@ Use Selected Email
 
 
 
-
 <Section icon="📧" title="Email / SMTP">
 
 
@@ -599,7 +588,8 @@ Use Selected Email
 "SmtpHost",
 "SmtpPort",
 "SmtpUsername",
-"SmtpPassword"
+"SmtpPassword",
+
 
 ].map(key=>
 
@@ -621,6 +611,7 @@ v=>updateField(key,v)
 }
 
 
+<button
 <div
 style={{
     display:"flex",
@@ -631,19 +622,14 @@ style={{
     borderBottom:"1px solid #333"
 }}
 >
-
 <strong>
 TestEmail
 </strong>
-
 <span>
-{current.TestEmail || ""}
+{testEmail || current.TestEmail || ""}
 </span>
-
 </div>
 
-
-<button
 onClick={sendTestEmail}
 >
 Send PlexWeekly Test Email
@@ -651,6 +637,8 @@ Send PlexWeekly Test Email
 
 
 </Section>
+
+
 
 
 

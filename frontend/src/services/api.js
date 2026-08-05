@@ -107,3 +107,9 @@ const API = {
 
 
 export default API;
+
+
+export async function getServiceHealth() {
+    const res = await fetch("/api/health/services");
+    return await res.json();
+}

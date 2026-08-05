@@ -1,3 +1,17 @@
+#!/bin/bash
+set -e
+
+BASE="/mnt/user/docker/PlexWeekly-Manager"
+
+echo "Backing up Dashboard.jsx..."
+
+cp "$BASE/frontend/src/pages/Dashboard.jsx" \
+"$BASE/frontend/src/pages/Dashboard.jsx.backup-health"
+
+
+echo "Replacing Dashboard.jsx..."
+
+cat > "$BASE/frontend/src/pages/Dashboard.jsx" <<'EOF2'
 import { useEffect, useState } from "react";
 import { getServiceHealth } from "../services/api";
 import StatusCard from "../components/StatusCard";
@@ -92,3 +106,13 @@ export default function Dashboard() {
         </div>
     );
 }
+EOF2
+
+
+echo "Done."
+echo ""
+echo "Rebuild frontend with:"
+echo "docker compose down"
+echo "docker compose build --no-cache"
+echo "docker compose up -d"
+

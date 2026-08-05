@@ -159,16 +159,6 @@ def save_plexweekly_config(config: dict):
 
 
 # -------------------------
-# -------------------------
-# Service Health Checks
-# -------------------------
-
-@app.get("/api/health/services")
-def health_services():
-
-    return service_health()
-
-
 # React Frontend
 # -------------------------
 
@@ -189,3 +179,6 @@ def frontend(path):
     )
 
 
+@app.get("/api/health/services")
+def health_services():
+    return service_health()

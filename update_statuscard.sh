@@ -1,3 +1,11 @@
+#!/bin/bash
+set -e
+
+FILE="frontend/src/components/StatusCard.jsx"
+
+cp "$FILE" "$FILE.backup"
+
+cat > "$FILE" <<'JSX'
 export default function StatusCard({
     title,
     icon,
@@ -80,3 +88,7 @@ export default function StatusCard({
     );
 
 }
+JSX
+
+echo "StatusCard updated"
+
