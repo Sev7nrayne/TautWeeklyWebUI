@@ -94,11 +94,16 @@ def send_test_email(user_id=None):
 
         cmd = [
             "docker",
-            "exec",
-            "tautweekly",
-            "/opt/tautweekly/bin/run-mode.sh",
-            "SendTest",
-            str(user_id)
+        "exec",
+        "plexweekly",
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "/opt/plexweekly/PlexWeekly.ps1",
+        "-Mode",
+        "SendTest",
+        "-UserId",
+        str(user_id)
         ]
 
 

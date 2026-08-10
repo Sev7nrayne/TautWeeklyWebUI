@@ -90,13 +90,7 @@ function Row({
                     :
                     ""
                 }
-                value={
-                    sensitive
-                    ?
-                    undefined
-                    :
-                    value ?? ""
-                }
+                value={value ?? ""}
                 onChange={
                     e =>
                     onChange(e.target.value)
@@ -179,17 +173,17 @@ loadData();
 
 
 
-function updateField(key,value){
+function updateField(key, value) {
 
-setEditConfig({
+setEditConfig(prev => ({
 
-...editConfig,
+    ...prev,
+    [key]: value
 
-[key]:value
-
-});
+}));
 
 }
+
 
 
 
@@ -273,7 +267,8 @@ setMessage(
 
 const result =
 await fetch(
-    "/api/tautweekly/test-email",
+    "/api/tautweekly/test-email?user_id=" +
+    encodeURIComponent(selectedUser),
     {
         method:"POST"
     }
@@ -350,8 +345,16 @@ loadData();
 
 function startEdit(){
 
+const editableConfig =
+structuredClone(config);
+
+SENSITIVE_FIELDS.forEach(
+key=>{
+    editableConfig[key] = "";
+});
+
 setEditConfig(
-structuredClone(config)
+editableConfig
 );
 
 setEditMode(true);
