@@ -45,3 +45,14 @@ TautWeekly WebUI does not replace TautWeekly — it provides a convenient web-ba
 **v1.0.0 — Initial Stable Release**
 
 This release establishes the core WebUI functionality for managing and monitoring a TautWeekly installation.
+
+## 🙏 Credits
+
+A special shout-out to [**sparkmoxie**](https://github.com/sparkmoxie) for creating **TautWeekly**, the underlying application that makes this project possible.
+
+**TautWeekly WebUI** is a management interface built around TautWeekly, adding a convenient web-based experience for Docker and Unraid users.
+
+👉 **TautWeekly:** https://github.com/sparkmoxie/TautWeekly
+
+Huge thanks to **sparkmoxie** for the original project and the work behind TautWeekly. ❤️
+
