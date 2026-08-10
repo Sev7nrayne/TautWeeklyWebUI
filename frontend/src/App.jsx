@@ -3,13 +3,10 @@ import { useState } from "react";
 import Dashboard from "./pages/Dashboard";
 import Config from "./pages/Config";
 import Logs from "./pages/Logs";
-import Scheduler from "./pages/Scheduler";
-
 
 function App(){
 
     const [page,setPage] = useState("dashboard");
-
 
     return (
 
@@ -23,13 +20,11 @@ function App(){
         }}
         >
 
-
             <nav
             style={{
                 marginBottom:"20px"
             }}
             >
-
 
                 <button
                 style={{
@@ -41,7 +36,6 @@ function App(){
                     Dashboard
                 </button>
 
-
                 <button
                 style={{
                     marginRight:"10px",
@@ -51,7 +45,6 @@ function App(){
                 >
                     Configuration
                 </button>
-
 
                 <button
                 style={{
@@ -63,23 +56,9 @@ function App(){
                     Logs
                 </button>
 
-
-                <button
-                style={{
-                    marginRight:"10px",
-                    padding:"10px"
-                }}
-                onClick={() => setPage("scheduler")}
-                >
-                    Scheduler
-                </button>
-
-
             </nav>
 
-
             <hr />
-
 
             {
                 page === "config"
@@ -88,9 +67,7 @@ function App(){
 
                 <Config />
 
-
                 :
-
 
                 page === "logs"
 
@@ -98,30 +75,15 @@ function App(){
 
                 <Logs />
 
-
                 :
-
-
-                page === "scheduler"
-
-                ?
-
-                <Scheduler />
-
-
-                :
-
 
                 <Dashboard />
-
             }
-
 
         </div>
 
     );
 
 }
-
 
 export default App;
