@@ -5,21 +5,18 @@ export default function StatusCard({
     message
 }) {
 
-    function statusColor(value) {
+    let indicator = "⚪";
 
-        if (value === "online") {
-            return "#22c55e";
-        }
+    if (status === "online") {
+        indicator = "🟢";
+    }
 
-        if (value === "warning") {
-            return "#eab308";
-        }
+    if (status === "offline") {
+        indicator = "🔴";
+    }
 
-        if (value === "offline") {
-            return "#ef4444";
-        }
-
-        return "#6b7280";
+    if (status === "warning") {
+        indicator = "🟡";
     }
 
 
@@ -41,26 +38,12 @@ export default function StatusCard({
 
             <div
                 style={{
-                    display:"flex",
-                    alignItems:"center",
-                    gap:"10px"
+                    fontSize:"18px",
+                    marginTop:"10px"
                 }}
             >
 
-                <span
-                    style={{
-                        width:"14px",
-                        height:"14px",
-                        borderRadius:"50%",
-                        background:statusColor(status),
-                        display:"inline-block"
-                    }}
-                ></span>
-
-
-                <strong>
-                    {status ? status.toUpperCase() : "UNKNOWN"}
-                </strong>
+                {indicator} {status?.toUpperCase()}
 
             </div>
 
@@ -68,10 +51,12 @@ export default function StatusCard({
             <div
                 style={{
                     marginTop:"8px",
-                    color:"#aaa"
+                    opacity:0.8
                 }}
             >
+
                 {message}
+
             </div>
 
 

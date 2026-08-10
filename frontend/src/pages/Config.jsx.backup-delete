@@ -306,27 +306,6 @@ setMessage(
 }
 
 
-
-async function removeBackup(file){
-
-    if(!confirm("Delete backup: " + file + "?")) return;
-
-    const result = await fetch(
-        "/api/plexweekly/backups/" + encodeURIComponent(file),
-        { method:"DELETE" }
-    ).then(r => r.json());
-
-    if(result.success){
-        setMessage("Backup deleted");
-        loadData();
-    }
-    else {
-        setMessage("Delete failed: " + result.error);
-    }
-
-}
-
-
 async function createBackup(){
 
 setMessage("Creating backup...");
@@ -491,27 +470,16 @@ Create Config Backup
 </button>
 
 
-
 {
 backups.map(
-file =>
-<div key={file}>
-
+file=>
 <Row
+key={file}
 label="Backup"
 value={file}
 />
-
-<button
-onClick={() => removeBackup(file)}
->
-🗑️ Delete
-</button>
-
-</div>
 )
 }
-
 
 </Section>
 

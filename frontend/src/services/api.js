@@ -1,115 +1,81 @@
 const API = {
 
 
-    async getPlexWeeklyConfig(){
-
-        const response = await fetch(
-            "/api/plexweekly/config"
-        );
-
-        return await response.json();
-
-    },
+async getPlexWeeklyConfig(){
+    const r = await fetch("/api/plexweekly/config");
+    return await r.json();
+},
 
 
-    async getPlexWeeklyStatus(){
+async savePlexWeeklyConfig(config){
 
-        const response = await fetch(
-            "/api/plexweekly/status"
-        );
+    const r = await fetch(
+        "/api/plexweekly/config/save",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(config)
+        }
+    );
 
-        return await response.json();
-
-    },
-
-
-    async getPlexWeeklySchema(){
-
-        const response = await fetch(
-            "/api/plexweekly/schema"
-        );
-
-        return await response.json();
-
-    },
+    return await r.json();
+},
 
 
-    async getPlexWeeklyLogs(){
+async getBackups(){
 
-        const response = await fetch(
-            "/api/plexweekly/logs"
-        );
+    const r = await fetch(
+        "/api/plexweekly/backups"
+    );
 
-        return await response.json();
-
-    },
-
-
-    async getPlexWeeklyScheduler(){
-
-        const response = await fetch(
-            "/api/plexweekly/scheduler"
-        );
-
-        return await response.json();
-
-    },
+    return await r.json();
+},
 
 
-    async createBackup(){
+async createBackup(){
 
-        const response = await fetch(
-            "/api/plexweekly/backup",
-            {
-                method:"POST"
-            }
-        );
+    const r = await fetch(
+        "/api/plexweekly/backup",
+        {
+            method:"POST"
+        }
+    );
 
-        return await response.json();
+    return await r.json();
 
-    },
-
-
-    async getBackups(){
-
-        const response = await fetch(
-            "/api/plexweekly/backups"
-        );
-
-        return await response.json();
-
-    },
-
-
-    async savePlexWeeklyConfig(config){
-
-        const response = await fetch(
-            "/api/plexweekly/config/save",
-            {
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify(config)
-
-            }
-        );
-
-
-        return await response.json();
-
-    }
+}
 
 
 };
 
 
+export async function deleteBackup(filename){
+
+    const r = await fetch(
+        "/api/plexweekly/backups/" +
+        encodeURIComponent(filename),
+        {
+            method:"DELETE"
+        }
+    );
+
+    return await r.json();
+
+}
+
+
 export default API;
 
 
-export async function getServiceHealth() {
-    const res = await fetch("/api/health/services");
-    return await res.json();
+export async function getServiceHealth(){
+
+    const r = await fetch(
+        "/api/health/services"
+    );
+
+    return await r.json();
+
 }
+

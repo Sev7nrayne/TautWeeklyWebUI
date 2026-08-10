@@ -1,0 +1,137 @@
+import os
+import json
+import requests
+from datetime import datetime
+
+
+CONFIG_PATH = "/plexweekly/data/config.json"
+
+
+def load_config():
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def check_plex():
+
+    config = load_config()
+
+    url = config.get("PlexServerUrl")
+    token = config.get("PlexToken")
+
+    if not url or not token:
+        return {
+            "status": "warning",
+            "message": "Missing Plex configuration"
+        }
+
+    try:
+        r = requests.get(
+            url.rstrip("/") + "/identity",
+            headers={
+                "X-Plex-Token": token
+            },
+            timeout=5
+        )
+
+        if r.status_code == 200:
+            return {
+                "status": "online",
+                "message": "Connected"
+            }
+
+        return {
+            "status": "offline",
+            "message": f"HTTP {r.status_code}"
+        }
+
+    except Exception as e:
+        return {
+            "status": "offline",
+            "message": str(e)
+        }
+
+
+def check_tautulli():
+
+    config = load_config()
+
+    url = config.get("TautulliUrl")
+    key = config.get("ApiKey")
+
+    if not url or not key:
+        return {
+            "status": "warning",
+            "message": "Missing Tautulli configuration"
+        }
+
+    try:
+        r = requests.get(
+            url,
+            params={
+                "apikey": key,
+                "cmd": "status"
+            },
+            timeout=5
+        )
+
+        data = r.json()
+
+        if data.get("response", {}).get("result") == "success":
+
+            return {
+                "status": "online",
+                "message": "API Connected"
+            }
+
+        return {
+            "status": "offline",
+            "message": "API Error"
+        }
+
+    except Exception as e:
+
+        return {
+            "status": "offline",
+            "message": str(e)
+        }
+
+
+def check_plexweekly():
+
+    checks = []
+
+    if os.path.exists("/plexweekly"):
+        checks.append("Installed")
+
+    if os.path.exists("/plexweekly/data/config.json"):
+        checks.append("Config Found")
+
+    if os.path.exists("/plexweekly/data/logs"):
+        checks.append("Logs Available")
+
+
+    if checks:
+        return {
+            "status": "online",
+            "message": " | ".join(checks)
+        }
+
+
+    return {
+        "status": "offline",
+        "message": "Missing"
+    }
+
+
+def service_health():
+
+    return {
+        "checked": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "plex": check_plex(),
+        "tautulli": check_tautulli(),
+        "plexweekly": check_plexweekly()
+    }
