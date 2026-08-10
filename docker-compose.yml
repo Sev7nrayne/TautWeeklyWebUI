@@ -4,9 +4,9 @@ services:
     build:
       context: .
 
-    image: tautweekly-manager:latest
+    image: tautweekly-webui:latest
 
-    container_name: tautweekly-manager
+    container_name: TautWeekly-WebUI
 
     restart: unless-stopped
 

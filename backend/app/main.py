@@ -253,7 +253,7 @@ def docker_logs():
 
     try:
         result = subprocess.run(
-            ["docker", "logs", "--tail", "100", "tautweekly-manager"],
+            ["docker", "logs", "--tail", "100", "TautWeekly-WebUI"],
             capture_output=True,
             text=True,
             timeout=10

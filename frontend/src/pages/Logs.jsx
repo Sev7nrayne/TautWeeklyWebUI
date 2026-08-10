@@ -90,7 +90,7 @@ export default function Logs() {
             </div>
 
             <p>
-                Last 100 lines from <strong>tautweekly-manager</strong>
+                Last 100 lines from <strong>TautWeekly-WebUI</strong>
             </p>
 
             <div
