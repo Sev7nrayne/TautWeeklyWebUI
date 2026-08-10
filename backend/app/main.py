@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from datetime import datetime
 import os
 
-from services import plexweekly
+from services import tautweekly
 from services import logs
 from services import scheduler
 from services import backup
@@ -15,7 +15,7 @@ from services.config_schema import CONFIG_SCHEMA
 
 
 app = FastAPI(
-    title="PlexWeekly-Manager",
+    title="TautWeekly-Manager",
     version="0.1.0"
 )
 
@@ -28,7 +28,7 @@ app = FastAPI(
 def status():
 
     return {
-        "application": "PlexWeekly-Manager",
+        "application": "TautWeekly-Manager",
         "status": "online",
         "version": "0.1.0",
         "time": datetime.now().isoformat()
@@ -44,19 +44,19 @@ def health():
 
 
 # -------------------------
-# PlexWeekly Integration
+# TautWeekly Integration
 # -------------------------
 
-@app.get("/api/plexweekly/status")
-def plexweekly_status():
+@app.get("/api/tautweekly/status")
+def tautweekly_status():
 
-    return plexweekly.get_status()
+    return tautweekly.get_status()
 
 
-@app.get("/api/plexweekly/config")
-def plexweekly_config():
+@app.get("/api/tautweekly/config")
+def tautweekly_config():
 
-    config = plexweekly.get_config()
+    config = tautweekly.get_config()
 
     if config is None:
 
@@ -67,32 +67,32 @@ def plexweekly_config():
     return config
 
 
-@app.get("/api/plexweekly/schema")
-def plexweekly_schema():
+@app.get("/api/tautweekly/schema")
+def tautweekly_schema():
 
     return CONFIG_SCHEMA
 
 
-@app.get("/api/plexweekly/logs")
-def plexweekly_logs():
+@app.get("/api/tautweekly/logs")
+def tautweekly_logs():
 
     return logs.get_logs()
 
 
-@app.get("/api/plexweekly/scheduler")
-def plexweekly_scheduler():
+@app.get("/api/tautweekly/scheduler")
+def tautweekly_scheduler():
 
     return scheduler.get_scheduler_status()
 
 
-@app.post("/api/plexweekly/backup")
-def plexweekly_backup():
+@app.post("/api/tautweekly/backup")
+def tautweekly_backup():
 
     return backup.create_backup()
 
 
-@app.get("/api/plexweekly/backups")
-def plexweekly_backups():
+@app.get("/api/tautweekly/backups")
+def tautweekly_backups():
 
     return backup.list_backups()
 
@@ -101,20 +101,20 @@ def plexweekly_backups():
 # Tautulli Users
 # -------------------------
 
-@app.get("/api/plexweekly/users")
-def plexweekly_users():
+@app.get("/api/tautweekly/users")
+def tautweekly_users():
 
     return tautulli.get_users()
 
 
 # -------------------------
-# PlexWeekly Test Email
+# TautWeekly Test Email
 # -------------------------
 
-@app.post("/api/plexweekly/test-email")
-def plexweekly_test_email(user_id: str):
+@app.post("/api/tautweekly/test-email")
+def tautweekly_test_email(user_id: str):
 
-    return plexweekly.send_test_email(user_id)
+    return tautweekly.send_test_email(user_id)
 
 
 
@@ -122,8 +122,8 @@ def plexweekly_test_email(user_id: str):
 # Config Save
 # -------------------------
 
-@app.post("/api/plexweekly/config/save")
-def save_plexweekly_config(config: dict):
+@app.post("/api/tautweekly/config/save")
+def save_tautweekly_config(config: dict):
 
     try:
 
@@ -184,14 +184,14 @@ if os.path.exists("static/assets"):
 
 
 
-@app.delete("/api/plexweekly/backups/{filename}")
-def delete_plexweekly_backup(filename: str):
+@app.delete("/api/tautweekly/backups/{filename}")
+def delete_tautweekly_backup(filename: str):
 
     return backup.delete_backup(filename)
 
 
 
-@app.delete("/api/plexweekly/backups/{filename}")
+@app.delete("/api/tautweekly/backups/{filename}")
 def delete_backup(filename: str):
 
     return backup.delete_backup(filename)
@@ -199,19 +199,19 @@ def delete_backup(filename: str):
 
 
 # -------------------------
-# Delete PlexWeekly Backup
+# Delete TautWeekly Backup
 # -------------------------
 
 from fastapi import HTTPException
 from urllib.parse import unquote
 
 
-@app.delete("/api/plexweekly/backups/{filename}")
+@app.delete("/api/tautweekly/backups/{filename}")
 def delete_backup(filename: str):
 
     filename = unquote(filename)
 
-    backup_dir = "/plexweekly/data/backups"
+    backup_dir = "/tautweekly/data/backups"
 
     import os
 
@@ -253,7 +253,7 @@ def docker_logs():
 
     try:
         result = subprocess.run(
-            ["docker", "logs", "--tail", "100", "plexweekly-manager"],
+            ["docker", "logs", "--tail", "100", "tautweekly-manager"],
             capture_output=True,
             text=True,
             timeout=10

@@ -5,7 +5,7 @@ import tempfile
 from services import backup
 
 
-CONFIG_PATH = "/plexweekly/data/config.json"
+CONFIG_PATH = "/tautweekly/data/config.json"
 
 
 

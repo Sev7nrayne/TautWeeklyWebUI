@@ -72,10 +72,10 @@ export default function Dashboard() {
 
 
                 <StatusCard
-                    title="PlexWeekly"
+                    title="TautWeekly"
                     icon="📨"
-                    status={health.plexweekly.status}
-                    message={health.plexweekly.message}
+                    status={health.tautweekly.status}
+                    message={health.tautweekly.message}
                 />
 
             </div>

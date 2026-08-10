@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASE="/mnt/user/docker/PlexWeekly-Manager"
+BASE="/mnt/user/docker/TautWeekly-Manager"
 
 echo "Creating health service..."
 
@@ -80,8 +80,8 @@ def check_tautulli():
         }
 
 
-def check_plexweekly():
-    if os.path.exists("/plexweekly"):
+def check_tautweekly():
+    if os.path.exists("/tautweekly"):
         return {
             "status": "online",
             "message": "Installed"
@@ -98,7 +98,7 @@ def service_health():
         "checked": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "plex": check_plex(),
         "tautulli": check_tautulli(),
-        "plexweekly": check_plexweekly()
+        "tautweekly": check_tautweekly()
     }
 PYEOF
 

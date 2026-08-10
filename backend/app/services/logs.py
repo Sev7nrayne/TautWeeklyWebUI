@@ -1,12 +1,12 @@
 import os
 
 
-PLEXWEEKLY_LOG_PATH = "/plexweekly/data/logs"
+TAUTWEEKLY_LOG_PATH = "/tautweekly/data/logs"
 
 
 def get_logs(limit=200):
 
-    if not os.path.exists(PLEXWEEKLY_LOG_PATH):
+    if not os.path.exists(TAUTWEEKLY_LOG_PATH):
 
         return {
             "error": "Log directory not found",
@@ -15,7 +15,7 @@ def get_logs(limit=200):
 
 
     files = sorted(
-        os.listdir(PLEXWEEKLY_LOG_PATH),
+        os.listdir(TAUTWEEKLY_LOG_PATH),
         reverse=True
     )
 
@@ -31,7 +31,7 @@ def get_logs(limit=200):
 
 
         path = os.path.join(
-            PLEXWEEKLY_LOG_PATH,
+            TAUTWEEKLY_LOG_PATH,
             file
         )
 

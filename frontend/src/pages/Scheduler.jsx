@@ -11,7 +11,7 @@ const [data,setData]=useState(null);
 
 useEffect(()=>{
 
-API.getPlexWeeklyScheduler()
+API.getTautWeeklyScheduler()
 .then(setData);
 
 },[]);

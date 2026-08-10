@@ -4,7 +4,7 @@ import requests
 from datetime import datetime
 
 
-CONFIG="/plexweekly/data/config.json"
+CONFIG="/tautweekly/data/config.json"
 
 
 def get_config():
@@ -116,9 +116,9 @@ def check_tautulli():
 
 
 
-def check_plexweekly():
+def check_tautweekly():
 
-    if os.path.exists("/plexweekly"):
+    if os.path.exists("/tautweekly"):
         return {
             "status":"online",
             "message":"Installed"
@@ -137,5 +137,5 @@ def service_health():
         "checked":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "plex":check_plex(),
         "tautulli":check_tautulli(),
-        "plexweekly":check_plexweekly()
+        "tautweekly":check_tautweekly()
     }

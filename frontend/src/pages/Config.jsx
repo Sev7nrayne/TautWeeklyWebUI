@@ -153,7 +153,7 @@ const [selectedUser,setSelectedUser]=useState("");
 async function loadData(){
 
 const cfg =
-await API.getPlexWeeklyConfig();
+await API.getTautWeeklyConfig();
 
 setConfig(cfg);
 
@@ -199,7 +199,7 @@ async function loadTautulliUsers(){
 setMessage("Loading Tautulli users...");
 
 const result =
-await fetch("/api/plexweekly/users")
+await fetch("/api/tautweekly/users")
 .then(r=>r.json());
 
 
@@ -273,7 +273,7 @@ setMessage(
 
 const result =
 await fetch(
-    "/api/plexweekly/test-email",
+    "/api/tautweekly/test-email",
     {
         method:"POST"
     }
@@ -312,7 +312,7 @@ async function removeBackup(file){
     if(!confirm("Delete backup: " + file + "?")) return;
 
     const result = await fetch(
-        "/api/plexweekly/backups/" + encodeURIComponent(file),
+        "/api/tautweekly/backups/" + encodeURIComponent(file),
         { method:"DELETE" }
     ).then(r => r.json());
 
@@ -392,7 +392,7 @@ cleanConfig[key]=config[key];
 
 
 const result =
-await API.savePlexWeeklyConfig(
+await API.saveTautWeeklyConfig(
 cleanConfig
 );
 
@@ -446,7 +446,7 @@ return (
 <div>
 
 <h1>
-⚙️ PlexWeekly Configuration
+⚙️ TautWeekly Configuration
 </h1>
 
 
@@ -678,7 +678,7 @@ TestEmail
 <button
 onClick={sendTestEmail}
 >
-Send PlexWeekly Test Email
+Send TautWeekly Test Email
 </button>
 
 

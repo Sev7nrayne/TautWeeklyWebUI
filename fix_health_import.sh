@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASE="/mnt/user/docker/PlexWeekly-Manager"
+BASE="/mnt/user/docker/TautWeekly-Manager"
 
 echo "Fixing health import..."
 

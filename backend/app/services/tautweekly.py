@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-PLEXWEEKLY_PATH = "/plexweekly"
+TAUTWEEKLY_PATH = "/tautweekly"
 
 
 def get_status():
@@ -15,11 +15,11 @@ def get_status():
         "logs_exists": False
     }
 
-    if os.path.exists(PLEXWEEKLY_PATH):
+    if os.path.exists(TAUTWEEKLY_PATH):
         data["installed"] = True
 
     config = os.path.join(
-        PLEXWEEKLY_PATH,
+        TAUTWEEKLY_PATH,
         "data",
         "config.json"
     )
@@ -28,7 +28,7 @@ def get_status():
         data["config_exists"] = True
 
     logs = os.path.join(
-        PLEXWEEKLY_PATH,
+        TAUTWEEKLY_PATH,
         "data",
         "logs"
     )
@@ -43,7 +43,7 @@ def get_status():
 def get_config():
 
     config_file = os.path.join(
-        PLEXWEEKLY_PATH,
+        TAUTWEEKLY_PATH,
         "data",
         "config.json"
     )
@@ -89,25 +89,25 @@ def send_test_email(user_id=None):
 
     try:
 
-        log(f"Starting PlexWeekly SendTest for user {user_id}")
+        log(f"Starting TautWeekly SendTest for user {user_id}")
 
 
         cmd = [
             "docker",
             "exec",
-            "plexweekly",
-            "/opt/plexweekly/bin/run-mode.sh",
+            "tautweekly",
+            "/opt/tautweekly/bin/run-mode.sh",
             "SendTest",
             str(user_id)
         ]
 
 
-        log("Launching PlexWeekly container")
+        log("Launching TautWeekly container")
 
 
         process = subprocess.Popen(
             cmd,
-            cwd="/plexweekly",
+            cwd="/tautweekly",
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -115,7 +115,7 @@ def send_test_email(user_id=None):
         )
 
 
-        log("Waiting for PlexWeekly output...")
+        log("Waiting for TautWeekly output...")
 
 
         for line in process.stdout:
@@ -131,7 +131,7 @@ def send_test_email(user_id=None):
 
         if process.returncode != 0:
 
-            log("PlexWeekly SendTest failed")
+            log("TautWeekly SendTest failed")
 
             return {
                 "success": False,
@@ -140,7 +140,7 @@ def send_test_email(user_id=None):
             }
 
 
-        log("PlexWeekly SendTest completed successfully")
+        log("TautWeekly SendTest completed successfully")
 
 
         return {

@@ -13,16 +13,16 @@ async getDockerLogs(){
 },
 
 
-async getPlexWeeklyConfig(){
-    const r = await fetch("/api/plexweekly/config");
+async getTautWeeklyConfig(){
+    const r = await fetch("/api/tautweekly/config");
     return await r.json();
 },
 
 
-async savePlexWeeklyConfig(config){
+async saveTautWeeklyConfig(config){
 
     const r = await fetch(
-        "/api/plexweekly/config/save",
+        "/api/tautweekly/config/save",
         {
             method:"POST",
             headers:{
@@ -39,7 +39,7 @@ async savePlexWeeklyConfig(config){
 async getBackups(){
 
     const r = await fetch(
-        "/api/plexweekly/backups"
+        "/api/tautweekly/backups"
     );
 
     return await r.json();
@@ -49,7 +49,7 @@ async getBackups(){
 async createBackup(){
 
     const r = await fetch(
-        "/api/plexweekly/backup",
+        "/api/tautweekly/backup",
         {
             method:"POST"
         }
@@ -66,7 +66,7 @@ async createBackup(){
 export async function deleteBackup(filename){
 
     const r = await fetch(
-        "/api/plexweekly/backups/" +
+        "/api/tautweekly/backups/" +
         encodeURIComponent(filename),
         {
             method:"DELETE"

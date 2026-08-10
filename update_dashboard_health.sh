@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BASE="/mnt/user/docker/PlexWeekly-Manager"
+BASE="/mnt/user/docker/TautWeekly-Manager"
 
 echo "Backing up Dashboard.jsx..."
 
@@ -86,10 +86,10 @@ export default function Dashboard() {
 
 
                 <StatusCard
-                    title="PlexWeekly"
+                    title="TautWeekly"
                     icon="📨"
-                    status={health.plexweekly.status}
-                    message={health.plexweekly.message}
+                    status={health.tautweekly.status}
+                    message={health.tautweekly.message}
                 />
 
             </div>

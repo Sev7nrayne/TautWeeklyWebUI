@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 
 
-SCHEDULER_PATH = "/plexweekly/data"
+SCHEDULER_PATH = "/tautweekly/data"
 
 
 

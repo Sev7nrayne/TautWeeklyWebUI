@@ -1,12 +1,12 @@
 services:
-  plexweekly-manager:
+  tautweekly-manager:
 
     build:
       context: .
 
-    image: plexweekly-manager:latest
+    image: tautweekly-manager:latest
 
-    container_name: plexweekly-manager
+    container_name: tautweekly-manager
 
     restart: unless-stopped
 
@@ -14,6 +14,6 @@ services:
       - "8788:8000"
 
     volumes:
-      - /mnt/user/docker/PlexWeekly:/plexweekly
-      - /mnt/user/docker/PlexWeekly/data:/plexweekly/data:rw
+      - /mnt/user/docker/TautWeekly:/tautweekly
+      - /mnt/user/docker/TautWeekly/data:/tautweekly/data:rw
       - /var/run/docker.sock:/var/run/docker.sock

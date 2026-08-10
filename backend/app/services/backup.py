@@ -3,9 +3,9 @@ import shutil
 from datetime import datetime
 
 
-CONFIG_PATH = "/plexweekly/data/config.json"
+CONFIG_PATH = "/tautweekly/data/config.json"
 
-BACKUP_PATH = "/plexweekly/data/backups"
+BACKUP_PATH = "/tautweekly/data/backups"
 
 
 

@@ -13,7 +13,7 @@ def get_users():
 
         return {
             "success": False,
-            "message": "PlexWeekly config not found"
+            "message": "TautWeekly config not found"
         }
 
 
