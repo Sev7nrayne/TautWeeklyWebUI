@@ -32,19 +32,16 @@ TautWeekly WebUI is designed to work alongside your existing TautWeekly installa
 * A working TautWeekly installation
 * Tautulli for user integration and newsletter management
 
-## 🔗 TautWeekly
-
-TautWeekly is the underlying newsletter application that powers the system:
-
-https://github.com/sparkmoxie/TautWeekly
-
-TautWeekly WebUI does not replace TautWeekly — it provides a convenient web-based management layer on top of it.
-
 ## 📌 Version
 
 **v1.0.0 — Initial Stable Release**
 
 This release establishes the core WebUI functionality for managing and monitoring a TautWeekly installation.
+
+## 🔗 TautWeekly
+
+TautWeekly is the underlying newsletter application that powers the system:
+TautWeekly WebUI does not replace TautWeekly — it provides a convenient web-based management layer on top of it.
 
 ## 🙏 Credits
 
