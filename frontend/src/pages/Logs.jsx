@@ -1,103 +1,116 @@
-import {useEffect,useState} from "react";
+import { useEffect, useState } from "react";
 import API from "../services/api";
 
+export default function Logs() {
 
-export default function Logs(){
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
 
+    const loadLogs = () => {
 
-const [logs,setLogs]=useState(null);
+        setData(null);
+        setError(null);
 
+        API.getDockerLogs()
+            .then((result) => {
+                setData(result);
+            })
+            .catch((err) => {
+                console.error("Failed to load Docker logs:", err);
+                setError(err.message || "Failed to load Docker logs");
+            });
 
+    };
 
-useEffect(()=>{
+    useEffect(() => {
+        loadLogs();
+    }, []);
 
+    if (error) {
 
-API.getPlexWeeklyLogs()
-.then(setLogs);
+        return (
+            <div style={{ padding: "20px" }}>
 
+                <h1>📜 Docker Logs</h1>
 
+                <div
+                    style={{
+                        background: "#300",
+                        padding: "20px",
+                        borderRadius: "10px",
+                        color: "#fff",
+                        fontFamily: "monospace"
+                    }}
+                >
+                    Failed to load logs: {error}
+                </div>
 
-},[]);
+            </div>
+        );
 
+    }
 
+    if (!data) {
 
-if(!logs){
+        return (
+            <div style={{ padding: "20px" }}>
+                <h1>📜 Docker Logs</h1>
+                <h2>Loading logs...</h2>
+            </div>
+        );
 
-return (
-<h2>
-Loading logs...
-</h2>
-)
+    }
 
-}
+    return (
+        <div style={{ padding: "20px" }}>
 
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "15px"
+                }}
+            >
 
+                <h1 style={{ margin: 0 }}>
+                    📜 Docker Logs
+                </h1>
 
-return (
+                <button
+                    onClick={loadLogs}
+                    style={{
+                        padding: "8px 14px",
+                        cursor: "pointer"
+                    }}
+                >
+                    🔄 Refresh
+                </button>
 
-<div>
+            </div>
 
+            <p>
+                Last 100 lines from <strong>plexweekly-manager</strong>
+            </p>
 
-<h1>
-📜 PlexWeekly Logs
-</h1>
+            <div
+                style={{
+                    background: "#000",
+                    color: "#fff",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    fontFamily: "monospace",
+                    whiteSpace: "pre-wrap",
+                    overflowX: "auto",
+                    overflowY: "auto",
+                    maxHeight: "70vh",
+                    fontSize: "13px",
+                    lineHeight: "1.5"
+                }}
+            >
+                {data.logs || "No Docker logs available."}
+            </div>
 
-
-<p>
-Entries:
-{" "}
-{logs.count}
-</p>
-
-
-
-<div
-style={{
-
-background:"#000",
-padding:"20px",
-borderRadius:"10px",
-fontFamily:"monospace",
-whiteSpace:"pre-wrap"
-
-}}
->
-
-
-{
-
-logs.logs.map(
-(item,index)=>(
-
-
-<div
-key={index}
->
-
-
-[{item.file}]
-
-{" "}
-
-{item.line}
-
-
-</div>
-
-
-)
-
-)
-
-
-}
-
-
-</div>
-
-
-</div>
-
-)
-
+        </div>
+    );
 }

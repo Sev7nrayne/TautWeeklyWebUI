@@ -1,5 +1,17 @@
 const API = {
 
+async getDockerLogs(){
+
+    const r = await fetch("/api/logs");
+
+    if (!r.ok) {
+        throw new Error(`Failed to load Docker logs: HTTP ${r.status}`);
+    }
+
+    return await r.json();
+
+},
+
 
 async getPlexWeeklyConfig(){
     const r = await fetch("/api/plexweekly/config");

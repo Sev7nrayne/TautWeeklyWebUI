@@ -181,13 +181,6 @@ if os.path.exists("static/assets"):
     )
 
 
-@app.get("/{path:path}")
-def frontend(path):
-
-    return FileResponse(
-        "static/index.html"
-    )
-
 
 
 
@@ -252,3 +245,44 @@ def delete_backup(filename: str):
         "file": filename
     }
 
+
+
+@app.get("/api/logs")
+def docker_logs():
+    import subprocess
+
+    try:
+        result = subprocess.run(
+            ["docker", "logs", "--tail", "100", "plexweekly-manager"],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        logs = result.stdout
+
+        if result.stderr:
+            logs += result.stderr
+
+        return {
+            "count": len(logs.splitlines()),
+            "logs": logs
+        }
+
+    except Exception as e:
+        return {
+            "count": 0,
+            "logs": "",
+            "error": str(e)
+        }
+
+# -------------------------
+# React Frontend Catch-All
+# -------------------------
+
+@app.get("/{path:path}")
+def frontend(path):
+
+    return FileResponse(
+        "static/index.html"
+    )
