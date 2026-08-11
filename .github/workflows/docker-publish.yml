@@ -38,5 +38,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/tautweeklywebui:latest
-            ghcr.io/${{ github.repository_owner }}/tautweeklywebui:${{ github.sha }}
+            ghcr.io/sev7nrayne/tautweeklywebui:latest
+            ghcr.io/sev7nrayne/tautweeklywebui:${{ github.sha }}
