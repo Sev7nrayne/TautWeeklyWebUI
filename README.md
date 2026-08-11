@@ -23,7 +23,7 @@ TautWeekly WebUI is designed to work alongside your existing TautWeekly installa
 
 **WebUI:** `http://YOUR-UNRAID-IP:8788`
 
-**Container:** `tautweekly-manager`
+**Container:** `TautWeekly-WebUI`
 
 ## 📦 Requirements
 
