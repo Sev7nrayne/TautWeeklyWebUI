@@ -84,7 +84,7 @@ def send_test_email(user_id=None):
             cmd = [
                 "docker",
                 "exec",
-                "plexweekly",
+                "TautWeekly",
                 "pwsh",
                 "-NoProfile",
                 "-File",
