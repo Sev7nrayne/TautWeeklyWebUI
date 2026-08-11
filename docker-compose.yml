@@ -1,9 +1,6 @@
 services:
   tautweekly-manager:
-    build:
-      context: .
-
-    image: tautweekly-webui:latest
+    image: ghcr.io/sev7nrayne/tautweeklywebui:latest
 
     container_name: TautWeekly-WebUI
 
