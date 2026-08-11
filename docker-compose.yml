@@ -1,6 +1,5 @@
 services:
   tautweekly-manager:
-
     build:
       context: .
 
@@ -9,6 +8,9 @@ services:
     container_name: TautWeekly-WebUI
 
     restart: unless-stopped
+
+    environment:
+      - TZ=America/New_York
 
     ports:
       - "8788:8000"

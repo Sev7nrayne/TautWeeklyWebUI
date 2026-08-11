@@ -24,7 +24,13 @@ def _get_backups():
             if os.path.isfile(path):
                 backups.append(filename)
 
-    return sorted(backups, reverse=True)
+    return sorted(
+        backups,
+        key=lambda filename: os.path.getmtime(
+            os.path.join(BACKUP_PATH, filename)
+        ),
+        reverse=True
+    )
 
 
 def _enforce_retention():
@@ -66,6 +72,11 @@ def _create_backup_file():
         CONFIG_PATH,
         backup_file
     )
+
+    # copy2 preserves the source mtime.
+    # Reset mtime so retention uses backup creation time.
+    now = datetime.now().timestamp()
+    os.utime(backup_file, (now, now))
 
     return os.path.basename(backup_file)
 
