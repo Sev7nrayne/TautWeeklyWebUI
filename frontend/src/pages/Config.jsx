@@ -332,6 +332,52 @@ async function removeBackup(file){
 }
 
 
+async function restoreBackup(file){
+
+    if(!confirm(
+        "Restore this backup?\n\n" +
+        file +
+        "\n\nThis will replace the current configuration. A safety backup will be created first."
+    )) return;
+
+    setMessage("Restoring backup...");
+
+    try {
+
+        const result = await fetch(
+            "/api/tautweekly/backups/" +
+            encodeURIComponent(file) +
+            "/restore",
+            { method:"POST" }
+        ).then(r => r.json());
+
+        if(result.success){
+            setMessage(
+                "Backup restored: " +
+                file
+            );
+            await loadData();
+        }
+        else {
+            setMessage(
+                "Restore failed: " +
+                (result.error || result.message || "")
+            );
+        }
+
+    }
+    catch(error){
+
+        setMessage(
+            "Restore failed: " +
+            error.message
+        );
+
+    }
+
+}
+
+
 async function createBackup(){
 
 setMessage("Creating backup...");
@@ -515,11 +561,21 @@ label="Backup"
 value={file}
 />
 
+<div style={{display:"flex",gap:"8px",marginTop:"6px"}}>
+
+<button
+onClick={() => restoreBackup(file)}
+>
+↩️ Restore
+</button>
+
 <button
 onClick={() => removeBackup(file)}
 >
 🗑️ Delete
 </button>
+
+</div>
 
 </div>
 )

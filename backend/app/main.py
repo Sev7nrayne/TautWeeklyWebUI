@@ -196,60 +196,11 @@ def delete_tautweekly_backup(filename: str):
     return backup.delete_backup(filename)
 
 
+@app.post("/api/tautweekly/backups/{filename}/restore")
+def restore_tautweekly_backup(filename: str):
 
-@app.delete("/api/tautweekly/backups/{filename}")
-def delete_backup(filename: str):
+    return backup.restore_backup(filename)
 
-    return backup.delete_backup(filename)
-
-
-
-# -------------------------
-# Delete TautWeekly Backup
-# -------------------------
-
-from fastapi import HTTPException
-from urllib.parse import unquote
-
-
-@app.delete("/api/tautweekly/backups/{filename}")
-def delete_backup(filename: str):
-
-    filename = unquote(filename)
-
-    backup_dir = "/tautweekly/data/backups"
-
-    import os
-
-    target = os.path.join(
-        backup_dir,
-        filename
-    )
-
-    if not os.path.exists(target):
-
-        return {
-            "success": False,
-            "error": "Backup not found"
-        }
-
-
-    if not os.path.isfile(target):
-
-        return {
-            "success": False,
-            "error": "Invalid backup file"
-        }
-
-
-    os.remove(target)
-
-
-    return {
-        "success": True,
-        "message": "Backup deleted",
-        "file": filename
-    }
 
 
 
