@@ -114,12 +114,10 @@ def tautweekly_users():
 @app.post("/api/tautweekly/test-email")
 def tautweekly_test_email(
     user_id: str = None,
-    email: str = None
 ):
 
     return tautweekly.send_test_email(
         user_id=user_id,
-        email=email
     )
 
 
