@@ -199,11 +199,15 @@ await fetch("/api/tautweekly/users")
 
 if(result.success){
 
-setUsers(
-    result.users.filter(
-        u=>u.email
-    )
+const emailUsers = result.users.filter(
+    u=>u.email
 );
+
+setUsers(emailUsers);
+
+if(emailUsers.length > 0 && !selectedUser){
+    setSelectedUser(String(emailUsers[0].user_id));
+}
 
 setMessage(
     "Tautulli users loaded"
@@ -260,48 +264,54 @@ setMessage(
 
 async function sendTestEmail(){
 
-setMessage(
-    "Sending test email..."
-);
+setMessage("Sending test email...");
 
+const email = (current.TestEmail || "").trim();
+const hasSelectedUser = selectedUser && String(selectedUser).trim() !== "";
 
-const result =
-await fetch(
-    "/api/tautweekly/test-email?user_id=" +
-    encodeURIComponent(selectedUser),
-    {
-        method:"POST"
-    }
-)
-.then(r=>r.json());
+let url;
 
-
-setMessage(
-    result.message ||
-    "Test email completed"
-);
-
-
-if(result.success){
-
-setMessage(
-    "✅ Test email sent successfully"
-);
-
+if(hasSelectedUser){
+    url = "/api/tautweekly/test-email?user_id=" +
+        encodeURIComponent(selectedUser);
+}
+else if(email){
+    url = "/api/tautweekly/test-email?email=" +
+        encodeURIComponent(email);
 }
 else{
+    setMessage("❌ Select a Tautulli user or enter an email address");
+    return;
+}
 
-setMessage(
-    "❌ Test email failed: " +
-    (result.message || "")
-);
+try{
+
+    const result = await fetch(
+        url,
+        {method:"POST"}
+    ).then(r=>r.json());
+
+    if(result.success){
+        setMessage("✅ Test email sent successfully");
+    }
+    else{
+        setMessage(
+            "❌ Test email failed: " +
+            (result.message || "")
+        );
+    }
+
+}
+catch(error){
+
+    setMessage(
+        "❌ Test email failed: " +
+        error.message
+    );
 
 }
 
 }
-
-
-
 async function removeBackup(file){
 
     if(!confirm("Delete backup: " + file + "?")) return;
@@ -656,33 +666,23 @@ v=>updateField(key,v)
 }
 
 
-<div
-style={{
-    display:"flex",
-    justifyContent:"space-between",
-    alignItems:"center",
-    gap:"20px",
-    padding:"8px 0",
-    borderBottom:"1px solid #333"
-}}
->
-
-<strong>
-TestEmail
-</strong>
-
-<span>
-{current.TestEmail || ""}
-</span>
-
-</div>
-
-
+<div style={{padding:"12px 0",borderBottom:"1px solid #333"}}>
+<strong>TestEmail</strong>
+<input
+type="email"
+value={current.TestEmail || ""}
+onChange={e=>{setSelectedUser("");updateField("TestEmail",e.target.value)}}
+disabled={!editMode}
+placeholder="Enter any email address"
+style={{display:"block",marginTop:"8px",width:"100%",maxWidth:"500px",padding:"8px"}}
+/>
 <button
 onClick={sendTestEmail}
+style={{marginTop:"12px",padding:"10px 16px"}}
 >
 Send TautWeekly Test Email
 </button>
+</div>
 
 
 </Section>
