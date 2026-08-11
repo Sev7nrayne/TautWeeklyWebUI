@@ -2,8 +2,6 @@ import json
 import os
 import subprocess
 import datetime
-import smtplib
-from email.message import EmailMessage
 
 TAUTWEEKLY_PATH = "/tautweekly"
 
@@ -55,7 +53,7 @@ def get_config():
         return json.load(f)
 
 
-def send_test_email(user_id=None, email=None):
+def send_test_email(user_id=None):
 
     live_logs = []
 
@@ -148,92 +146,11 @@ def send_test_email(user_id=None, email=None):
             }
 
     # -------------------------------------------------
-    # Manual email path
-    # -------------------------------------------------
 
-    if email:
-
-        try:
-
-            config = get_config()
-
-            if not config:
-
-                return {
-                    "success": False,
-                    "message": "TautWeekly config not found",
-                    "logs": live_logs
-                }
-
-            smtp_host = config.get("SmtpHost")
-            smtp_port = int(config.get("SmtpPort", 587))
-            smtp_username = config.get("SmtpUsername")
-            smtp_password = config.get("SmtpPassword")
-            from_email = config.get("FromEmail") or smtp_username
-
-            if not smtp_host:
-                raise ValueError("SmtpHost is not configured")
-
-            if not smtp_username:
-                raise ValueError("SmtpUsername is not configured")
-
-            if not smtp_password:
-                raise ValueError("SmtpPassword is not configured")
-
-            if not from_email:
-                raise ValueError("FromEmail is not configured")
-
-            log(f"Sending SMTP test to {email}")
-            log(f"SMTP server: {smtp_host}:{smtp_port}")
-
-            message = EmailMessage()
-
-            message["From"] = from_email
-            message["To"] = email
-            message["Subject"] = "TautWeekly SMTP Test"
-
-            message.set_content(
-                "This is a test email from TautWeekly WebUI.\n\n"
-                "SMTP configuration is working correctly."
-            )
-
-            with smtplib.SMTP(
-                smtp_host,
-                smtp_port,
-                timeout=30
-            ) as smtp:
-
-                smtp.ehlo()
-                smtp.starttls()
-                smtp.ehlo()
-
-                smtp.login(
-                    smtp_username,
-                    smtp_password
-                )
-
-                smtp.send_message(message)
-
-            log("Manual SMTP test email sent successfully")
-
-            return {
-                "success": True,
-                "message": "Test email sent successfully",
-                "logs": live_logs
-            }
-
-        except Exception as e:
-
-            log(f"SMTP ERROR: {str(e)}")
-
-            return {
-                "success": False,
-                "message": str(e),
-                "logs": live_logs
-            }
-
+    # No manual email sending.
+    # Test emails must target a selected Tautulli user.
     return {
         "success": False,
-        "message": "Tautulli user or email address required",
+        "message": "Select a Tautulli user with an email address",
         "logs": live_logs
     }

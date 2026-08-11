@@ -205,9 +205,17 @@ const emailUsers = result.users.filter(
 
 setUsers(emailUsers);
 
-if(emailUsers.length > 0 && !selectedUser){
-    setSelectedUser(String(emailUsers[0].user_id));
-}
+setSelectedUser("");
+
+setConfig(prev => ({
+    ...prev,
+    TestEmail: ""
+}));
+
+setEditConfig(prev => ({
+    ...prev,
+    TestEmail: ""
+}));
 
 setMessage(
     "Tautulli users loaded"
@@ -228,88 +236,47 @@ setMessage(
 
 
 
-function useSelectedEmail(){
-
-const user =
-users.find(
-    u=>String(u.user_id) === String(selectedUser)
-);
-
-
-if(user){
-
-setConfig(prev=>({
-    ...prev,
-    TestEmail:user.email
-}));
-
-
-setEditConfig(prev=>({
-    ...prev,
-    TestEmail:user.email
-}));
-
-
-setMessage(
-    "Test email updated from Tautulli"
-);
-
-}
-
-}
-
-
-
-
+ 
 
 async function sendTestEmail(){
 
-setMessage("Sending test email...");
-
-const email = (current.TestEmail || "").trim();
-const hasSelectedUser = selectedUser && String(selectedUser).trim() !== "";
-
-let url;
-
-if(hasSelectedUser){
-    url = "/api/tautweekly/test-email?user_id=" +
-        encodeURIComponent(selectedUser);
-}
-else if(email){
-    url = "/api/tautweekly/test-email?email=" +
-        encodeURIComponent(email);
-}
-else{
-    setMessage("❌ Select a Tautulli user or enter an email address");
-    return;
-}
-
-try{
-
-    const result = await fetch(
-        url,
-        {method:"POST"}
-    ).then(r=>r.json());
-
-    if(result.success){
-        setMessage("✅ Test email sent successfully");
+    if(!selectedUser){
+        setMessage("❌ Select a Tautulli user first");
+        return;
     }
-    else{
+
+    setMessage("Sending test email...");
+
+    const url =
+        "/api/tautweekly/test-email?user_id=" +
+        encodeURIComponent(selectedUser);
+
+    try{
+
+        const result = await fetch(
+            url,
+            {method:"POST"}
+        ).then(r=>r.json());
+
+        if(result.success){
+            setMessage("✅ Test email sent successfully");
+        }
+        else{
+            setMessage(
+                "❌ Test email failed: " +
+                (result.message || "")
+            );
+        }
+
+    }
+    catch(error){
+
         setMessage(
             "❌ Test email failed: " +
-            (result.message || "")
+            error.message
         );
+
     }
-
-}
-catch(error){
-
-    setMessage(
-        "❌ Test email failed: " +
-        error.message
-    );
-
-}
 
 }
 async function removeBackup(file){
@@ -653,9 +620,32 @@ Load Tautulli Users
 
 <select
 value={selectedUser}
-onChange={
-e=>setSelectedUser(e.target.value)
-}
+onChange={e=>{
+    const userId = e.target.value;
+    setSelectedUser(userId);
+
+    const user = users.find(
+        u=>String(u.user_id) === String(userId)
+    );
+
+    const email = user?.email || "";
+
+    setConfig(prev=>({
+        ...prev,
+        TestEmail: email
+    }));
+
+    setEditConfig(prev=>({
+        ...prev,
+        TestEmail: email
+    }));
+
+    setMessage(
+        email
+            ? "Test email updated from Tautulli"
+            : "Selected user has no email address"
+    );
+}}
 >
 
 <option value="">
@@ -677,9 +667,7 @@ value={u.user_id}
 </select>
 
 
-<button onClick={useSelectedEmail}>
-Use Selected Email
-</button>
+
 
 
 </Section>
@@ -725,18 +713,18 @@ v=>updateField(key,v)
 <div style={{padding:"12px 0",borderBottom:"1px solid #333"}}>
 <strong>TestEmail</strong>
 <input
-type="email"
-value={current.TestEmail || ""}
-onChange={e=>{setSelectedUser("");updateField("TestEmail",e.target.value)}}
-disabled={!editMode}
-placeholder="Enter any email address"
-style={{display:"block",marginTop:"8px",width:"100%",maxWidth:"500px",padding:"8px"}}
+ type="email"
+ value={selectedUser ? (current.TestEmail || "") : ""}
+ readOnly
+ placeholder="Select a Tautulli user"
+ style={{display:"block",marginTop:"8px",width:"100%",maxWidth:"500px",padding:"8px"}}
 />
 <button
-onClick={sendTestEmail}
-style={{marginTop:"12px",padding:"10px 16px"}}
+ onClick={sendTestEmail}
+ disabled={!selectedUser || !current.TestEmail}
+ style={{marginTop:"12px",padding:"10px 16px"}}
 >
-Send TautWeekly Test Email
+ Send TautWeekly Test Email
 </button>
 </div>
 
